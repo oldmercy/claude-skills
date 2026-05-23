@@ -66,13 +66,14 @@ $tags      = [regex]::Matches($body, '#(\S+)') | ForEach-Object { "#$($_.Groups[
 $author = $note.user.nickname
 $type   = $note.type   # "normal" (image post) or "video"
 
-# Image URLs — urlDefault is the CDN URL
-$imageUrls = @()
-if ($note.imageList) {
-    $imageUrls = @($note.imageList |
-        Where-Object { $_.urlDefault -match '^https?://' } |
-        ForEach-Object { $_.urlDefault })
-}
+# Image URLs — note.imageList[].urlDefault is often empty string in server-rendered HTML;
+# use regex on raw JSON to capture urlDefault values from infoList and other structures,
+# then decode Unicode-escaped slashes (/ → /)
+$imageUrls = @(
+    [regex]::Matches($rawJson, '"urlDefault"\s*:\s*"([^"]+)"') |
+        ForEach-Object { $_.Groups[1].Value -replace '\\u002F', '/' } |
+        Where-Object { $_ -match '^https?://' }
+)
 
 # Video URL — prefer H.264, fall back to H.265
 $videoUrl = $null
