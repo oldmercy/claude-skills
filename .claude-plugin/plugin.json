@@ -1,0 +1,10 @@
+{
+  "name": "claude-xhs-skill",
+  "version": "1.0.0",
+  "description": "Fetch and digest Xiaohongshu (小红书 / RedNote) posts — extracts text, downloads images, and retrieves video URLs. No login required.",
+  "author": {
+    "name": "oldmercy",
+    "url": "https://github.com/oldmercy"
+  },
+  "homepage": "https://github.com/oldmercy/claude-xhs-skill"
+}
